@@ -1,105 +1,188 @@
-
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<!DOCTYPE html><html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="BD2026؛ بستری برای کشف سازندگان محتوا، ارتباط با افراد هم‌علاقه و همکاری واقعی در شبکه‌های اجتماعی.">
-  <title>BD2026 | جامعه سازندگان محتوا</title>
-  <style>
-    * { box-sizing: border-box; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BD2026 | با هم رشد کنیم</title>
+    <meta name="description" content="به BD2026 خوش آمدید؛ فضایی برای ارتباط، همکاری و رشد مشترک."><style>
+    * {
+        box-sizing: border-box;
+    }
+
     body {
-      margin: 0;
-      font-family: Tahoma, Arial, sans-serif;
-      background: #f5f7fb;
-      color: #172033;
-      line-height: 2;
+        margin: 0;
+        font-family: Tahoma, Arial, sans-serif;
+        background: #f5f7fb;
+        color: #222;
+        line-height: 1.9;
     }
+
     header {
-      background: #14213d;
-      color: white;
-      padding: 22px 16px;
-      text-align: center;
+        background: #14213d;
+        color: white;
+        padding: 18px 6%;
     }
-    header h1 { margin: 0; font-size: 30px; }
-    header p { margin: 4px 0 0; color: #dbeafe; }
-    main {
-      max-width: 850px;
-      margin: 28px auto;
-      padding: 0 16px;
+
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
     }
+
+    nav a {
+        color: white;
+        text-decoration: none;
+        margin-left: 14px;
+    }
+
     .hero {
-      background: white;
-      padding: 28px 20px;
-      border-radius: 18px;
-      text-align: center;
-      box-shadow: 0 5px 20px #14213d10;
+        padding: 70px 6%;
+        text-align: center;
+        background: #e8efff;
     }
-    .hero h2 { color: #2563eb; }
+
+    .hero h1 {
+        font-size: 32px;
+        color: #14213d;
+    }
+
+    .hero p {
+        max-width: 650px;
+        margin: 15px auto;
+    }
+
     .button {
-      display: inline-block;
-      background: #2563eb;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 9px;
-      text-decoration: none;
-      margin-top: 10px;
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        padding: 10px 24px;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-top: 12px;
     }
+
+    section {
+        padding: 45px 6%;
+    }
+
     .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }.card {
+background: white;
+padding: 22px;
+border-radius: 12px;
+box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+}
+
+    .card h3 {
+        color: #2563eb;
     }
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 14px;
-      border: 1px solid #e5e7eb;
+
+    .about {
+        background: white;
     }
-    .card h3 { margin-top: 0; color: #1d4ed8; }
+
+    .contact {
+        text-align: center;
+        background: #e8efff;
+    }
+
     footer {
-      text-align: center;
-      padding: 24px 12px;
-      color: #64748b;
+        text-align: center;
+        background: #14213d;
+        color: white;
+        padding: 18px;
     }
-  </style>
+
+    @media (max-width: 700px) {
+        .cards {
+            grid-template-columns: 1fr;
+        }
+
+        .hero h1 {
+            font-size: 25px;
+        }
+
+        nav {
+            flex-direction: column;
+        }
+    }
+</style>
+
 </head>
-<body>
-  <header>
-    <h1>BD2026</h1>
-    <p>با هم رشد کنیم، واقعی ارتباط بگیریم</p>
-  </header>
+<body><header>
+    <nav>
+        <strong>BD2026</strong>
+        <div>
+            <a href="#home">خانه</a>
+            <a href="#features">خدمات</a>
+            <a href="#about">درباره ما</a>
+            <a href="#contact">تماس</a>
+        </div>
+    </nav>
+</header>
 
-  <main>
-    <section class="hero">
-      <h2>به جامعه سازندگان محتوا خوش آمدید</h2>
-      <p>
-        افرادی را پیدا کنید که علایق مشترک با شما دارند،
-        ایده‌هایتان را به اشتراک بگذارید و همکاری‌های واقعی بسازید.
-      </p>
-      <a class="button" href="#features">آشنایی با امکانات</a>
+<main>
+    <section class="hero" id="home">
+        <h1>با هم رشد کنیم، ارتباط واقعی بگیریم</h1>
+        <p>
+            به BD2026 خوش آمدید؛ فضایی برای آشنایی،
+            همکاری و ساختن فرصت‌های تازه در کنار یکدیگر.
+        </p>
+        <a class="button" href="#features">بیشتر آشنا شوید</a>
     </section>
 
-    <section class="cards" id="features">
-      <article class="card">
-        <h3>🔎 کشف سازندگان</h3>
-        <p>با سازندگان محتوا در زمینه‌های مورد علاقه خود آشنا شوید.</p>
-      </article>
-      <article class="card">
-        <h3>🤝 همکاری واقعی</h3>
-        <p>برای تولید محتوا، تبادل ایده و پروژه‌های مشترک ارتباط بگیرید.</p>
-      </article>
-      <article class="card">
-        <h3>⭐ مشارکت سازنده</h3>
-        <p>با مشارکت مفید در جامعه، به رشد و پیشرفت دیگران کمک کنید.</p>
-      </article>
-    </section>
-  </main>
+    <section id="features">
+        <h2>چه فرصت‌هایی فراهم می‌کنیم؟</h2>
 
-  <footer>
-    <p>© 2026 BD2026 — شروعی برای همکاری‌های بهتر</p>
-  </footer>
+        <div class="cards">
+            <article class="card">
+                <h3>کشف سازندگان</h3>
+                <p>
+                    افراد خلاق و توانمند را پیدا کنید
+                    و با ایده‌های تازه آشنا شوید.
+                </p>
+            </article>
+            <article class="card">
+                <h3>همکاری واقعی</h3>
+                <p>
+                    با افراد هم‌فکر ارتباط برقرار کنید
+                    و برای رسیدن به هدف‌های مشترک همکاری کنید.
+                </p>
+            </article>        <article class="card">
+            <h3>مشارکت سازنده</h3>
+            <p>
+                ایده‌های خود را به اشتراک بگذارید
+                و در کنار دیگران فرصت‌های تازه بسازید.
+            </p>
+        </article>
+    </div>
+</section>
+
+<section class="about" id="about">
+    <h2>درباره BD2026</h2>
+    <p>
+        BD2026 با هدف ایجاد ارتباط‌های مفید،
+        گسترش همکاری و کمک به رشد مشترک شکل گرفته است.
+        ما باور داریم که ارتباط درست می‌تواند فرصت‌های تازه‌ای بسازد.
+    </p>
+</section>
+
+<section class="contact" id="contact">
+    <h2>با ما در ارتباط باشید</h2>
+    <p>
+        به‌زودی راه‌های ارتباطی و اطلاعات تکمیلی
+        در این بخش قرار خواهند گرفت.
+    </p>
+</section>
+</main>
+
+<footer>
+    <p>© 2026 BD2026 — تمامی حقوق محفوظ است.</p>
+</footer>
+
 </body>
 </html>
-
