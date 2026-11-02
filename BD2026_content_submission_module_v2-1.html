@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BD2026 | معرفی محتوای مستقل - نسخه آزمایشی ۲</title>
+<style>
+:root{font-family:Tahoma,Arial,sans-serif;color:#172033;background:#f4f6fa}
+*{box-sizing:border-box}body{margin:0;padding:18px;line-height:1.8}
+main{max-width:760px;margin:24px auto;background:#fff;padding:24px;border-radius:18px;box-shadow:0 8px 30px #14213d12}
+h1{font-size:1.55rem;margin:0 0 8px;color:#183b67}p{margin:8px 0 16px}
+.notice{background:#eef5ff;border-right:4px solid #3675bd;padding:12px 14px;border-radius:8px;font-size:.92rem}
+label{display:block;font-weight:700;margin:16px 0 5px}
+input,select,textarea{width:100%;padding:12px;border:1px solid #cbd3df;border-radius:9px;font:inherit;background:#fff}
+textarea{min-height:110px;resize:vertical}
+small{display:block;color:#5e6878;font-weight:400}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400}
+.check input{width:auto;margin-top:8px}
+button{border:0;border-radius:10px;background:#174f89;color:#fff;padding:13px 20px;font:inherit;font-weight:700;cursor:pointer;margin-top:18px;width:100%}
+button:focus,input:focus,select:focus,textarea:focus{outline:3px solid #a8c9ef;outline-offset:1px}
+#result{margin-top:18px;padding:14px;border-radius:10px;display:none;white-space:pre-wrap}
+.ok{display:block!important;background:#eaf7ef;color:#155b32;border:1px solid #b7e2c5}
+.warn{display:block!important;background:#fff6df;color:#714d00;border:1px solid #f0d58b}
+.bad{display:block!important;background:#fff0ef;color:#8b2820;border:1px solid #edc0bc}
+footer{font-size:.86rem;color:#657083;margin-top:22px;border-top:1px solid #e6eaf0;padding-top:14px}
+</style>
+</head>
+<body>
+<main>
+<h1>معرفی یک محتوای مستقل</h1>
+<p>محتوای ارزشمند را معرفی کنید تا پس از بررسی، امکان نمایش و کشف آن فراهم شود.</p>
+<div class="notice"><b>قانون مهم:</b> فقط لینک مستقیم یک پست یا محتوای مستقل قابل ثبت است؛ لینک پروفایل، کانال، صفحه اصلی یا فهرست محتوا پذیرفته نیست. این نسخه فقط داده آزمایشی را در همین مرورگر نگه می‌دارد.</div>
+
+<form id="submissionForm">
+<label for="platform">پلتفرم انتشار *</label>
+<select id="platform" required>
+<option value="">انتخاب کنید</option><option>YouTube</option><option>Instagram</option><option>Facebook</option><option>Aparat</option>
+</select>
+
+<label for="kind">نوع محتوا *</label>
+<select id="kind" required>
+<option value="">انتخاب کنید</option><option>ویدئو</option><option>ویدئوی کوتاه / Reel / Shorts</option><option>پست مستقل</option><option>مقاله یا محتوای متنی مستقل</option><option>سایر محتوای مستقل</option>
+</select>
+
+<label for="url">لینک مستقیم محتوا *<small>لینک باید به خود محتوا برسد، نه صفحه سازنده یا کانال او.</small></label>
+<input id="url" type="url" inputmode="url" placeholder="https://..." required>
+
+<label for="title">عنوان محتوا *</label>
+<input id="title" maxlength="160" required>
+
+<label for="topic">موضوع اصلی *</label>
+<select id="topic" required>
+<option value="">انتخاب کنید</option><option>آموزش و یادگیری</option><option>فناوری و نوآوری</option><option>کسب‌وکار و کارآفرینی</option><option>هنر و فرهنگ</option><option>سلامت و سبک زندگی</option><option>محیط زیست</option><option>سرگرمی</option><option>سایر موضوعات</option>
+</select>
+
+<label for="language">زبان محتوا</label>
+<select id="language"><option>فارسی</option><option>انگلیسی</option><option>سایر زبان‌ها</option><option>چندزبانه</option></select>
+
+<label for="description">توضیح کوتاه *<small>حداکثر ۶۰۰ نویسه.</small></label>
+<textarea id="description" maxlength="600" required></textarea>
+
+<label class="check"><input id="independent" type="checkbox" required><span>تأیید می‌کنم این لینک به یک محتوای مستقل می‌رسد، نه پروفایل، کانال یا صفحه اصلی.</span></label>
+<button type="submit">بررسی اطلاعات و ذخیره آزمایشی</button>
+</form>
+<div id="result" role="status" aria-live="polite"></div>
+<footer>نسخه آزمایشی ۲ — تشخیص خودکار فقط بر اساس الگوی نشانی است و وجود، کیفیت یا مستقل‌بودن واقعی محتوا را اثبات نمی‌کند. بررسی نهایی باید در سرور و در صورت نیاز توسط بازبین انسانی انجام شود.</footer>
+</main>
+<script>
+(function(){
+const form=document.getElementById('submissionForm');
+const result=document.getElementById('result');
+const knownHosts={
+ YouTube:['youtube.com','youtu.be'],
+ Instagram:['instagram.com'],
+ Facebook:['facebook.com','fb.watch'],
+ Aparat:['aparat.com']
+};
+function show(type,msg){result.className=type;result.textContent=msg;}
+function hostMatches(host,allowed){return allowed.some(d=>host===d||host.endsWith('.'+d));}
+function classify(platform,raw){
+ let u;
+ try{u=new URL(raw.trim());}catch(e){return {state:'manual_review',reason:'نشانی قابل‌خواندن نیست؛ برای بررسی دستی نگه داشته می‌شود.'};}
+ if(!['https:','http:'].includes(u.protocol))return {state:'rejected',reason:'فقط نشانی HTTP یا HTTPS مجاز است.'};
+ if(u.username||u.password)return {state:'manual_review',reason:'نشانی دارای اطلاعات ورود است؛ نیازمند بازبینی دستی.'};
+ const host=u.hostname.toLowerCase().replace(/^www\./,'');
+ if(!knownHosts[platform]||!hostMatches(host,knownHosts[platform]))
+   return {state:'manual_review',reason:'دامنه با پلتفرم انتخاب‌شده تطبیق ندارد یا ناشناخته است؛ به‌جای رد خودکار، برای بازبینی دستی علامت‌گذاری شد.'};
+
+ const path=u.pathname.replace(/\/+$/,'')||'/';
+ let isProfile=false, isContent=false;
+ if(platform==='YouTube'){
+   isContent=(path==='/watch'&&!!u.searchParams.get('v'))||/^\/(shorts|live|embed)\/[^/]+/.test(path);
+   isProfile=/^\/(@[^/]+|channel\/[^/]+|c\/[^/]+|user\/[^/]+)$/.test(path)||path==='/';
+ } else if(platform==='Instagram'){
+   isContent=/^\/(p|reel|tv)\/[^/]+/.test(path);
+   isProfile=/^\/[^/]+$/.test(path)||path==='/';
+ } else if(platform==='Facebook'){
+   isContent=/^\/(reel|watch|videos)\/[^/]+/.test(path)||(/^\/[^/]+\/posts\/[^/]+/.test(path));
+   isProfile=path==='/'||/^\/(profile\.php|pages\/[^/]+)$/.test(path)||(/^\/[^/]+$/.test(path)&&!isContent);
+ } else if(platform==='Aparat'){
+   isContent=/^\/v\/[^/]+/.test(path);
+   isProfile=path==='/'||(/^\/[^/]+$/.test(path)&&!isContent);
+ }
+ if(isContent)return {state:'accepted_pattern',reason:'الگوی نشانی با یک مسیر متداول محتوا سازگار است؛ این فقط پذیرش الگوست، نه تأیید واقعی محتوا.'};
+ if(isProfile)return {state:'rejected',reason:'این نشانی شبیه پروفایل، کانال یا صفحه اصلی است و به‌عنوان محتوای مستقل پذیرفته نمی‌شود.'};
+ return {state:'manual_review',reason:'الگوی این نشانی در فهرست مسیرهای شناخته‌شده نیست؛ برای بررسی دستی علامت‌گذاری شد.'};
+}
+form.addEventListener('submit',function(ev){
+ ev.preventDefault();
+ if(!form.reportValidity())return;
+ const platform=document.getElementById('platform').value;
+ const raw=document.getElementById('url').value;
+ const verdict=classify(platform,raw);
+ if(verdict.state==='rejected'){show('bad',verdict.reason);return;}
+ const record={
+  platform,kind:document.getElementById('kind').value,url:raw.trim(),
+  title:document.getElementById('title').value.trim(),
+  topic:document.getElementById('topic').value,
+  language:document.getElementById('language').value,
+  description:document.getElementById('description').value.trim(),
+  review_status:verdict.state,
+  review_note:verdict.reason,
+  created_at:new Date().toISOString()
+ };
+ try{
+  const key='bd2026_demo_submissions_v2';
+  const old=JSON.parse(localStorage.getItem(key)||'[]');
+  if(!Array.isArray(old))throw new Error('invalid storage');
+  old.push(record);
+  localStorage.setItem(key,JSON.stringify(old));
+ }catch(err){
+  show('bad','ذخیره در مرورگر انجام نشد. فضای ذخیره‌سازی را بررسی کنید یا از مرورگر دیگری استفاده کنید.');
+  return;
+ }
+ if(verdict.state==='accepted_pattern')
+  show('ok','بررسی الگوی نشانی موفق بود و اطلاعات آزمایشی در همین مرورگر ذخیره شد.\\nوضعیت: پذیرش الگوی نشانی (accepted_pattern)\\n'+verdict.reason+'\\nاین نتیجه تأیید نمی‌کند که محتوا واقعاً وجود دارد یا مستقل است.');
+ else
+  show('warn','اطلاعات آزمایشی در همین مرورگر ذخیره شد و برای بازبینی انسانی علامت‌گذاری شد.\\nوضعیت: بازبینی دستی (manual_review)\\n'+verdict.reason);
+});
+})();
+</script>
+</body>
+</html>
