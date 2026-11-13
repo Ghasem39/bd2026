@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ghasem39.github.io/bd2026/sitemap.xml
