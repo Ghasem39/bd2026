@@ -1,0 +1,56 @@
+name: Read-only Production Worker Snapshot
+
+on:
+  push:
+    branches:
+      - test/bd2026-playback-autopublish
+    paths:
+      - .github/workflows/worker-snapshot.yml
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout test branch
+        uses: actions/checkout@v4
+        with:
+          ref: test/bd2026-playback-autopublish
+
+      - name: Read Worker source and deployment metadata
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT_ID: e93a30feda749beecf767e7e5fa236a8
+          SCRIPT_NAME: bd2026-api
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$SCRIPT_NAME/content/v2" \
+            -o worker-production-snapshot.js
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACCOUNT_ID/workers/scripts/$SCRIPT_NAME/deployments" \
+            -o worker-production-deployments.json
+          test -s worker-production-snapshot.js
+          grep -q "export default\|addEventListener" worker-production-snapshot.js
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("worker-production-deployments.json")
+          data = json.loads(p.read_text())
+          if data.get("success") is not True or not data.get("result"):
+              raise SystemExit("Cloudflare did not return deployment metadata")
+          PY
+
+      - name: Commit read-only snapshot to test branch
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add worker-production-snapshot.js worker-production-deployments.json
+          git commit -m "Add read-only Production Worker snapshot" || exit 0
+          git push
