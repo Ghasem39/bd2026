@@ -1,0 +1,20 @@
+name: Deploy BD2026 isolated preview
+on:
+  push:
+    branches:
+      - test/bd2026-playback-autopublish
+    paths:
+      - index.html
+      - BD2026-TEST-PREVIEW.html
+      - .github/workflows/deploy-preview.yml
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish preview branch to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy . --project-name=db2026-12 --branch=bd2026-playback-autopublish
