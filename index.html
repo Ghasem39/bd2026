@@ -713,7 +713,7 @@ document.querySelectorAll('[data-action]').forEach(button=>button.addEventListen
 
 <script>
 (function(){
-  var queue=[], current=0, timer=null, refreshTimer=null;
+  var queue=[], current=0, timer=null, refreshTimer=null, activeId='', activeSrc='';
   var frame=document.getElementById('featuredFrame');
   var empty=document.getElementById('featuredEmpty');
   var title=document.getElementById('featuredTitle');
@@ -746,15 +746,39 @@ document.querySelectorAll('[data-action]').forEach(button=>button.addEventListen
     return '';
   }
   function show(index){
-    if(!queue.length){frame.hidden=true;frame.removeAttribute('src');empty.hidden=false;title.textContent='در انتظار محتوای منتخب';status.textContent='هنوز محتوای منتشرشده‌ای در صف کتابخانه نمایش نیست.';return;}
-    current=(index+queue.length)%queue.length;
-    var item=queue[current], src=embedFor(item);
-    if(!src){show(current+1);return;}
-    frame.hidden=false;empty.hidden=true;
-    if(frame.src!==src) frame.src=src;
+    if(!queue.length){
+      activeId='';activeSrc='';
+      if(timer)clearTimeout(timer);
+      frame.hidden=true;frame.removeAttribute('src');empty.hidden=false;
+      title.textContent='در انتظار محتوای منتخب';
+      status.textContent='هنوز محتوای منتشرشده‌ای در صف کتابخانه نمایش نیست.';
+      return;
+    }
+    var selected=-1, src='';
+    for(var step=0;step<queue.length;step++){
+      var candidate=(index+step)%queue.length;
+      src=embedFor(queue[candidate]);
+      if(src){selected=candidate;break;}
+    }
+    if(selected<0){
+      activeId='';activeSrc='';
+      if(timer)clearTimeout(timer);
+      frame.hidden=true;frame.removeAttribute('src');empty.hidden=false;
+      status.textContent='محتوای قابل‌پخش در صف فعلی پیدا نشد.';
+      return;
+    }
+    current=selected;
+    var item=queue[current];
+    if(activeId===item.id && activeSrc===src){
+      title.textContent=(item.title||'محتوای منتخب BD2026').slice(0,160);
+      status.textContent='از صف کتابخانه نمایش دریافت شد · '+(current+1).toLocaleString('fa-IR')+' از '+queue.length.toLocaleString('fa-IR');
+      return;
+    }
+    activeId=item.id;activeSrc=src;
+    frame.hidden=false;empty.hidden=true;frame.src=src;
     title.textContent=(item.title||'محتوای منتخب BD2026').slice(0,160);
     status.textContent='از صف کتابخانه نمایش دریافت شد · '+(current+1).toLocaleString('fa-IR')+' از '+queue.length.toLocaleString('fa-IR');
-    if(timer) clearTimeout(timer);
+    if(timer)clearTimeout(timer);
     var seconds=Math.max(10,Math.min(3600,Number(item.duration_seconds)||180));
     timer=setTimeout(function(){show(current+1)},seconds*1000);
   }
@@ -763,18 +787,19 @@ document.querySelectorAll('[data-action]').forEach(button=>button.addEventListen
       if(typeof window.api!=='function') throw new Error('ارتباط API آماده نیست.');
       var data=await window.api('/api/campaigns/featured?limit=30');
       var items=Array.isArray(data.items)?data.items:[];
-      var activeId=queue[current]&&queue[current].id;
+      var activeIndex=items.findIndex(function(x){return x.id===activeId});
       queue=items;
-      var same=queue.findIndex(function(x){return x.id===activeId});
-      show(same>=0?same:(items.length?0:0));
-      if(!items.length) status.textContent='هنوز کمپین منتشرشده‌ای برای نمایش در صف وجود ندارد.';
+      show(activeIndex>=0?activeIndex:0);
     }catch(e){
-      if(!queue.length){frame.hidden=true;empty.hidden=false;status.textContent='دریافت صف نمایش از سرور ناموفق بود؛ اتصال دوباره بررسی می‌شود.';}
+      if(!queue.length){
+        frame.hidden=true;empty.hidden=false;
+        status.textContent='دریافت صف نمایش از سرور ناموفق بود؛ اتصال دوباره بررسی می‌شود.';
+      }
     }
   }
   window.BD2026_refreshFeatured=refresh;
   refresh();
   refreshTimer=setInterval(refresh,60000);
 })();
-</script>
+</script>>
 </body></html>
