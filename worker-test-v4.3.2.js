@@ -1148,7 +1148,7 @@ async function handle(request, env) {
   }
 
   if (method === "GET" && path === "/api/pro/plans") {
-    const settings = await getPaymentSettings(db);
+    const settings = await getPaymentSettings(env.DB);
     return json({ ok: true, currency: "IRR", payment_provider: "zarinpal", enabled: settings.zarinpal_enabled && UUID_RE.test(String(env.ZARINPAL_MERCHANT_ID || "")), plans: PRO_PLANS });
   }
 
