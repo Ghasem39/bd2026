@@ -1399,6 +1399,12 @@ async function handle(request, env) {
 
 
   // ??? ???: ????????? ?????? ???? ????? / ????? (???? ??????? ???????)
+  if (path === "/api/campaigns/featured" && method === "GET") {
+    if (!caps.campaigns) return unavailable("campaigns");
+    const featured = await db.prepare("SELECT id, platform, content_url, title, created_at FROM campaigns WHERE status = 'published' ORDER BY created_at DESC LIMIT 1").first();
+    return json({ ok: true, campaign: featured ? { id: featured.id, platform: featured.platform, url: featured.content_url, title: featured.title, created_at: featured.created_at } : null });
+  }
+
   if (path === "/api/campaigns/discover" && method === "GET") {
     if (!caps.campaigns) return unavailable("??? ?????");
     const user = await requireUser(db, request, env);
