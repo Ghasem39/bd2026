@@ -1,0 +1,28 @@
+name: BD2026 Test Package
+on:
+  push:
+    branches:
+      - test/bd2026-playback-autopublish
+    paths:
+      - 'index.html'
+      - 'BD2026-TEST-PREVIEW.html'
+      - 'worker-test-v4.3.2.js'
+      - '.github/workflows/test-package.yml'
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate worker syntax
+        run: node --check worker-test-v4.3.2.js
+      - name: Package test preview and worker
+        uses: actions/upload-artifact@v4
+        with:
+          name: BD2026-TEST-PREVIEW-PACKAGE
+          path: |
+            BD2026-TEST-PREVIEW.html
+            worker-test-v4.3.2.js
+          if-no-files-found: error
+          retention-days: 7
