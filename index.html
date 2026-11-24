@@ -63,7 +63,7 @@
 <section class="page-view active" data-view="home" id="view-home">
 <section class="hello"><div class="balance">۰ کوین</div><div class="eyebrow">خوش آمدی به خانه‌ات</div><h1>چیزی ارزشمند برای کشف کردن هست.</h1><p>محتوایی متناسب با علاقه‌هایت؛ بدون شلوغی و بدون اجبار.</p></section>
 <div class="section-head"><h2>پیشنهاد امروز</h2><span>یک کشف تازه، با انتخاب تو</span></div>
-<section class="feature"><div class="video"><div class="scene"></div><span class="video-tag">منتخب بر اساس علاقه‌ها</span><div class="video-coins">۰ کوین</div><div class="play">▶</div><div class="video-caption">جایی برای ایده‌های تازه</div></div><div class="feature-meta"><div><div class="meta-title">یک محتوای منتخب برای تو</div><div class="meta-sub">پیش‌نمایش نمونه · ویدئو با لینک مستقیم جایگزین می‌شود</div></div><span class="pill">محتوای مستقل</span></div><div class="prompt">دوست داری چه کاری انجام بدهی؟</div><div class="actions"><button class="action" data-action="تماشا و کشف"><span class="ico">▶</span>تماشا و کشف</button><button class="action" data-action="گفت‌وگو"><span class="ico">☏</span>گفت‌وگو</button><button class="action" data-action="اشتراک‌گذاری"><span class="ico">↗</span>اشتراک‌گذاری</button><button class="action" data-action="ذخیره محتوا"><span class="ico">♡</span>ذخیره محتوا</button><button class="action" data-action="اشتراک در یوتیوب"><span class="ico">▶+</span>سابسکرایب</button></div><div class="hint" id="hint">هر انتخاب آزادانه است. پیش از هر خدمت دارای هزینه، مقدار کوین و دلیل مصرف به‌روشنی نمایش داده می‌شود.</div></section>
+<section class="feature"><div class="video" id="homeVideoPlayer"><div class="scene" id="homeVideoContent" aria-live="polite" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#101b26;color:#fff"><span>در حال دریافت محتوای منتشرشده…</span></div><span class="video-tag">منتخب بر اساس علاقه‌ها</span><div class="video-coins">۰ کوین</div><div class="play" id="homeVideoPlay" role="button" tabindex="0" aria-label="پخش محتوای منتخب">▶</div><div class="video-caption" id="homeVideoCaption">محتوای منتشرشده کمپین‌ها</div></div><div class="feature-meta"><div><div class="meta-title">یک محتوای منتخب برای تو</div><div class="meta-sub">پیش‌نمایش نمونه · ویدئو با لینک مستقیم جایگزین می‌شود</div></div><span class="pill">محتوای مستقل</span></div><div class="prompt">دوست داری چه کاری انجام بدهی؟</div><div class="actions"><button class="action" data-action="تماشا و کشف"><span class="ico">▶</span>تماشا و کشف</button><button class="action" data-action="گفت‌وگو"><span class="ico">☏</span>گفت‌وگو</button><button class="action" data-action="اشتراک‌گذاری"><span class="ico">↗</span>اشتراک‌گذاری</button><button class="action" data-action="ذخیره محتوا"><span class="ico">♡</span>ذخیره محتوا</button><button class="action" data-action="اشتراک در یوتیوب"><span class="ico">▶+</span>سابسکرایب</button></div><div class="hint" id="hint">هر انتخاب آزادانه است. پیش از هر خدمت دارای هزینه، مقدار کوین و دلیل مصرف به‌روشنی نمایش داده می‌شود.</div></section>
 <div class="section-head" id="campaign"><h2>همراهی با BD2026 و دریافت پاداش</h2><span>صفحات رسمی</span></div>
 
 <div class="section-head"><h2>خانه‌ای برای علایق تو</h2><span>همیشه قابل تغییر</span></div><section class="discover"><div class="mini"><span class="iconbox">⌕</span><strong>کشف محتوای تازه</strong><small>موضوع‌هایی که با سلیقه تو هم‌خوان‌اند.</small></div><div class="mini"><span class="iconbox">♧</span><strong>ارتباط واقعی</strong><small>فرصت گفت‌وگو و همکاری داوطلبانه.</small></div></section>
@@ -189,6 +189,46 @@
  document.querySelectorAll('.action').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.action').forEach(x=>x.classList.remove('active'));btn.classList.add('active');const hint=$('hint');if(hint)hint.textContent='انتخاب شما: '+btn.dataset.action+'؛ قابلیت‌های مالی فقط پس از تأیید معتبر سرور اجرا می‌شوند.';notify('انتخاب شد: '+btn.dataset.action)}));
  async function init(){if(missing.length){notify('ساختار صفحه ناقص است؛ بخش‌های آنلاین فعال نشدند.');console.error('BD2026 missing elements:',missing);return}try{const health=await fetch(API+'/api/health',{cache:'no-store'});const report=await health.json();if(!health.ok||!report.ok)notify('سرویس در وضعیت آماده نیست؛ عملیات مالی و ثبت کمپین انجام نمی‌شود.')}catch{notify('ارتباط با سرویس برقرار نشد؛ امکانات آنلاین در دسترس نیست.')}if(token())$('auth-open').textContent='خروج';await Promise.all([loadPlans(),refreshWallet(),loadCampaigns(),loadProStatus()])}
  init();
+})();
+</script>
+<script id="BD2026_HOME_PLAYER_ONLY_PATCH">
+(()=>{'use strict';
+ const API='https://bd2026-api.d9437351.workers.dev';
+ const box=document.getElementById('homeVideoContent');
+ const titleEl=document.querySelector('.feature-meta .meta-title');
+ const statusEl=document.querySelector('.feature-meta .meta-sub');
+ const platformEl=document.querySelector('.feature-meta .pill');
+ const playEl=document.getElementById('homeVideoPlay');
+ const captionEl=document.getElementById('homeVideoCaption');
+ const watchBtn=document.querySelector('[data-action="تماشا و کشف"]');
+ if(!box)return;
+ let items=[],index=0,loading=false;
+ const setText=(el,value)=>{if(el)el.textContent=String(value||'');};
+ function safeUrl(raw){try{const u=new URL(String(raw||''));return u.protocol==='https:'?u:null;}catch{return null;}}
+ function ytId(u){if(!u)return'';const h=u.hostname.replace(/^www\./,'').toLowerCase();if(h==='youtu.be')return u.pathname.split('/').filter(Boolean)[0]||'';if(h==='youtube.com'||h==='m.youtube.com'||h==='youtube-nocookie.com'){if(u.pathname==='/watch')return u.searchParams.get('v')||'';const m=u.pathname.match(/^\/(?:shorts|embed|live)\/([A-Za-z0-9_-]+)/);return m?m[1]:'';}return'';}
+ function frame(src,title,height){const f=document.createElement('iframe');f.src=src;f.title=title||'BD2026 content';f.loading='lazy';f.referrerPolicy='strict-origin-when-cross-origin';f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';f.allowFullscreen=true;f.style.cssText='width:100%;height:100%;min-height:'+height+'px;border:0;display:block;background:#101b26';box.appendChild(f);}
+ function render(item){
+  box.replaceChildren();
+  const raw=String(item.content_url||'').trim(),u=safeUrl(raw),platform=String(item.platform||'').toLowerCase();
+  setText(titleEl,item.title||'محتوای منتخب BD2026');setText(statusEl,'محتوای منتشرشده از کمپین‌ها');setText(platformEl,platform.toUpperCase()||'محتوای مستقل');setText(captionEl,item.title||'محتوای منتشرشده کمپین‌ها');
+  if(!u){setText(box,'پیوند این محتوا معتبر نیست.');return;}
+  const host=u.hostname.replace(/^www\./,'').toLowerCase(),id=ytId(u);
+  if(id&&/^(youtube\.com|m\.youtube\.com|youtu\.be|youtube-nocookie\.com)$/.test(host)){frame('https://www.youtube-nocookie.com/embed/'+encodeURIComponent(id)+'?rel=0',item.title||'YouTube video',240);if(playEl)playEl.hidden=true;return;}
+  if(platform==='aparat'&&host==='aparat.com'){const m=u.pathname.match(/^\/(?:v|video)\/([A-Za-z0-9]+)/i);if(m){frame('https://www.aparat.com/video/video/embed/videohash/'+encodeURIComponent(m[1])+'/vt/frame',item.title||'Aparat video',240);if(playEl)playEl.hidden=true;return;}}
+  if(platform==='instagram'&&host==='instagram.com'){const m=u.pathname.match(/^\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/i);if(m){frame('https://www.instagram.com/'+(u.pathname.split('/')[1])+'/'+encodeURIComponent(m[1])+'/embed',item.title||'Instagram post',360);if(playEl)playEl.hidden=true;return;}}
+  if(/\.(mp4|webm|ogg)$/i.test(u.pathname)){const v=document.createElement('video');v.src=u.href;v.controls=true;v.playsInline=true;v.preload='metadata';v.style.cssText='width:100%;max-height:440px;display:block';box.appendChild(v);if(playEl)playEl.hidden=true;return;}
+  const a=document.createElement('a');a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent='مشاهده محتوای ثبت‌شده در '+(platform||'سایت مبدأ');a.style.cssText='display:inline-block;padding:14px 20px;background:#fff;color:#173b35;border-radius:12px;text-decoration:none;font-weight:700';box.appendChild(a);if(playEl)playEl.hidden=false;
+ }
+ async function load(){
+  if(loading)return;loading=true;setText(box,'در حال دریافت محتوای منتشرشده…');
+  try{const r=await fetch(API+'/api/home/featured?limit=20',{headers:{accept:'application/json'},cache:'no-store'});const d=await r.json();if(!r.ok||!d||d.ok!==true)throw new Error(d&&d.error?d.error:'HTTP '+r.status);items=Array.isArray(d.campaigns)?d.campaigns.filter(x=>x&&typeof x.content_url==='string'&&safeUrl(x.content_url)):[];if(!items.length){box.replaceChildren();setText(box,'هنوز محتوای منتشرشده‌ای برای نمایش وجود ندارد.');setText(titleEl,'منتظر محتوای تازه');setText(statusEl,'پس از انتشار کمپین، محتوا در این قسمت نمایش داده می‌شود.');setText(platformEl,'BD2026');if(playEl)playEl.hidden=true;return;}index=0;render(items[index]);}
+  catch(e){box.replaceChildren();setText(box,'دریافت محتوای پلیر با خطا روبه‌رو شد.');setText(statusEl,'اتصال به سرویس نمایش محتوا برقرار نشد.');if(playEl)playEl.hidden=true;}
+  finally{loading=false;}
+ }
+ function next(){if(items.length){index=(index+1)%items.length;render(items[index]);}else load();}
+ if(watchBtn)watchBtn.addEventListener('click',e=>{if(items.length){e.preventDefault();next();}});
+ if(playEl){playEl.addEventListener('click',load);playEl.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();load();}});}
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',load,{once:true});else load();
 })();
 </script>
 </body></html>
